@@ -1,9 +1,10 @@
 # 포토 맵 프로젝트
 
 ## TypeScript, FireBase, Kakao map을 사용하는 개인 프로젝트 입니다.
+<hr/>
 
-   
-## 
+## To Do List    
+
 >## 카카오 맵   
 >>[x] 맵 로딩   
 >>[ ] 마킹   
