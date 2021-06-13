@@ -27,3 +27,4 @@ public
 
 .firebase
 /public
+.env
