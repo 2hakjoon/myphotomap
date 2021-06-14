@@ -2,6 +2,16 @@ import firebase from "firebase";
 
 let provider = "";
 
+let keepEmail = "";
+export const setEmail = (email) => {
+    keepEmail = email;
+  }
+  
+  export const getEmail = () => {
+    return keepEmail
+  }
+
+
 export const connectAuth = () => {
     provider = new firebase.auth.GoogleAuthProvider();
 }
@@ -17,10 +27,11 @@ export const FB_login = () => {
                 // This gives you a Google Access Token. You can use it to access the Google API.
                 var token = credential.accessToken;
                 // ...
+                var user = result.user;
+                localStorage.setItem('TOKEN', token);
+                keepEmail = user.email
             }
             // The signed-in user info.
-            var user = result.user;
-            localStorage.setItem('TOKEN', token);
             
         }).catch((error) => {
             // Handle Errors here.
