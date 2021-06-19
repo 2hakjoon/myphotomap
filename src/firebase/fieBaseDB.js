@@ -2,13 +2,13 @@ import firebase from "firebase";
 import { getEmail } from "./fireBaseAuth";
 
 
-let db = "";
+
 
 export const connectDB = () => {
-    db = firebase.firestore();
+    return firebase.firestore();
 }
 
-export const FB_dbTest = async() => {
+export const FB_dbTest = async(db) => {
     const docRef = db.collection('users').doc(`${getEmail()}`);
 
         await docRef.set({

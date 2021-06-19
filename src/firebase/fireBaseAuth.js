@@ -1,8 +1,7 @@
 import firebase from "firebase";
 
-let provider = "";
-
 let keepEmail = "";
+
 export const setEmail = (email) => {
     keepEmail = email;
   }
@@ -13,10 +12,10 @@ export const setEmail = (email) => {
 
 
 export const connectAuth = () => {
-    provider = new firebase.auth.GoogleAuthProvider();
+    return new firebase.auth.GoogleAuthProvider();
 }
 
-export const FB_login = () => {
+export const FB_login = (provider) => {
     if(!localStorage.getItem("TOKEN")){
         firebase.auth().signInWithPopup(provider).then((result) => {
             console.log(result)
