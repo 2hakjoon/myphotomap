@@ -1,4 +1,5 @@
 import firebase from "firebase";
+import { getEmail } from "./fireBaseAuth";
 
 
 let storage =""
@@ -11,19 +12,13 @@ export const connectStorage = () => {
 
 
 export const uploadPhoto = async(file) => {
-    const uploadTask1 = await storageRef.child('images/mountains.jpg').put(file);
-    console.log(uploadTask1)
-    
-    const uploadTask2 = await storageRef.child('images/shit.jpg').put(file);
-    console.log(uploadTask2)
-    
+    const userEmail = getEmail();
+    const uploadTask = await storageRef.child(`${userEmail}/${file.name}`).put(file);
 }
 
-export const getPhoto = async(file) => {
-    
-    const getImg1 = await storageRef.child('images/mountains.jpg').getDownloadURL();
-    console.log(getImg1)
-    
-    const getImg2 = await storageRef.child('images/shit.jpg').getDownloadURL();
-    console.log(getImg2)
+export const getPhoto = async(filename) => {
+    const userEmail = getEmail();
+
+    const getImg = await storageRef.child(`${userEmail}/${filename}`).getDownloadURL();
+    return getImg
 }
