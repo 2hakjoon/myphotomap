@@ -11,6 +11,19 @@ export const connectStorage = () => {
 
 
 export const uploadPhoto = async(file) => {
-    const uploadTask = await storageRef.child('images/mountains.jpg').put(file);
-    console.log(uploadTask)
+    const uploadTask1 = await storageRef.child('images/mountains.jpg').put(file);
+    console.log(uploadTask1)
+    
+    const uploadTask2 = await storageRef.child('images/shit.jpg').put(file);
+    console.log(uploadTask2)
+    
+}
+
+export const getPhoto = async(file) => {
+    
+    const getImg1 = await storageRef.child('images/mountains.jpg').getDownloadURL();
+    console.log(getImg1)
+    
+    const getImg2 = await storageRef.child('images/shit.jpg').getDownloadURL();
+    console.log(getImg2)
 }
