@@ -1,7 +1,9 @@
 import { useState } from "react"
 import styled from "styled-components"
+import { FB_dbUploadAlbums } from "../../firebase/fieBaseDB"
 import { getPhoto, uploadPhoto } from "../../firebase/fireBaseStorage"
 import { Img } from "../atoms/Img"
+import { Lat, Lng } from "./KakaoMap/KakaoMap"
 
 
 
@@ -45,6 +47,16 @@ export const ImageUploadModal = () => {
         console.log(res)
         setImg(res)
     }
+
+    const uploadToDB = () => {
+        const data ={
+            lat: Lat,
+            lng: Lng,
+            photos:["KakaoTalk_20210603_231522292.jpg","KakaoTalk_20210603_231522292.jpg"]
+        } 
+        FB_dbUploadAlbums(data);
+    }
+
     const [img, setImg] = useState(undefined);
 
     return(
@@ -52,6 +64,7 @@ export const ImageUploadModal = () => {
             <Imgview>
                 <input type="file" onChange={imgUploadHandler}></input>
                 <button onClick={getImgFromStorage}>불러오기</button>
+                <button onClick={uploadToDB}> DB 호출띠</button>
                 <ImgWrapper>
                     <Img src={img}/>
                 </ImgWrapper>

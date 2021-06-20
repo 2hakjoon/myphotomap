@@ -16,6 +16,10 @@ const Div = styled.div`
     }
 `;
 
+
+export let Lat = ""
+export let Lng = ""
+
 export const KakaoMap = () => {
     let markers = [];
     const [imgSize, setImgSize] = useState(9);
@@ -64,6 +68,8 @@ export const KakaoMap = () => {
             // 클릭한 위도, 경도 정보를 가져옵니다 
             var latlng = mouseEvent.latLng;
             
+            Lat = latlng.getLat();
+            Lng = latlng.getLng();
             var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
             message += '경도는 ' + latlng.getLng() + ' 입니다';
             

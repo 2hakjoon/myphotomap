@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { ImageUploadModal } from "./component/organisms/ImageUploadModal";
 import { KakaoMap } from "./component/organisms/KakaoMap/KakaoMap";
-import { connectDB, FB_dbTest } from "./firebase/fieBaseDB";
+import { connectDB } from "./firebase/fieBaseDB";
 import { FB_login, connectAuth, getEmail } from "./firebase/fireBaseAuth";
 import { connectStorage, uploadPhoto } from "./firebase/fireBaseStorage";
 
@@ -28,9 +28,8 @@ function App() {
   const provider = connectAuth();
   FB_login(provider);
 
-  const db = connectDB();
+  connectDB();
   const click = () => {
-    FB_dbTest(db);
   }
 
   connectStorage();
