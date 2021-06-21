@@ -60,7 +60,7 @@ export const ImageUploadModal = () => {
     const [img, setImg] = useState(undefined);
 
     return(
-        <Wrapper>
+        <Wrapper id={"background"} >
             <Imgview>
                 <input type="file" onChange={imgUploadHandler}></input>
                 <button onClick={getImgFromStorage}>불러오기</button>

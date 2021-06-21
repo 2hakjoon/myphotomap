@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { ImageUploadModal } from "./component/organisms/ImageUploadModal";
 import { KakaoMap } from "./component/organisms/KakaoMap/KakaoMap";
@@ -24,7 +25,8 @@ localStorage.removeItem("TOKEN");
 
 
 function App() {
- 
+
+  const [uploadModal, setUploadModal] = useState(false);
   const provider = connectAuth();
   FB_login(provider);
 
@@ -34,14 +36,11 @@ function App() {
 
   connectStorage();
 
-  
-
   return(
     <Container>
-      <ImageUploadModal/>
-      <KakaoMap />
+      {uploadModal ? <ImageUploadModal /> : null}
+      <KakaoMap modalOpen={setUploadModal} />
       <Button onClick={click}/>
-
     </Container>
   )
 }

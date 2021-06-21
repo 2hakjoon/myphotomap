@@ -20,10 +20,23 @@ const Div = styled.div`
 export let Lat = ""
 export let Lng = ""
 
-export const KakaoMap = () => {
+export const KakaoMap = ({modalOpen}) => {
     let markers = [];
     const [imgSize, setImgSize] = useState(9);
+    const clickevent = (e) => {
+        if(e.target.id === "infoWindow"){
+            modalOpen(true);
+        }
+        else if(e.target.id === "background"){
+            modalOpen(false);
+        }
+        else{
+            console.log(e)
+        }
+    }
     useEffect(() => {
+        window.addEventListener("click", clickevent);
+
         var marker = new kakao.maps.Marker({})
 
         var mapContainer = document.getElementById("map"), // 지도를 표시할 div
@@ -78,7 +91,7 @@ export const KakaoMap = () => {
             marker.setPosition(latlng);
             marker.setMap(map);
 
-            var iwContent = '<div style="width:150px;text-align:center;padding:6px 0;"  onClick={console.log("good")}>사진 저장</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+            var iwContent = `<div id="infoWindow" style="width:150px;text-align:center;padding:6px 0;"}>사진 저장</div>`, // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
                 iwPosition = new kakao.maps.LatLng(latlng.getLat(), latlng.getLng()); //인포윈도우 표시 위치입니다
                 
             // 인포윈도우를 생성합니다
@@ -91,6 +104,7 @@ export const KakaoMap = () => {
             markers.push(infowindow)
             
         });
+       
     },[]);
 
     return <Div id={"map"} size={imgSize}></Div>;
