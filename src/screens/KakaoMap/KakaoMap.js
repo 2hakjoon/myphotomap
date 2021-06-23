@@ -35,6 +35,7 @@ export const KakaoMap = ({modalOpen}) => {
         }
     }
     useEffect(() => {
+        
         window.addEventListener("click", clickevent);
 
         var marker = new kakao.maps.Marker({})

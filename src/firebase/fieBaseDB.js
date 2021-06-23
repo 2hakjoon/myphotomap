@@ -23,9 +23,7 @@ export const FB_dbGetAlbums = async () => {
 export const FB_dbUploadAlbums = async(data) => {
     //console.log(data)
     let albums = await FB_dbGetAlbums()
-    albums[Object.keys(albums).length] = data
-    console.log(albums)
-    
+    albums[Object.keys(albums).length] = data;
     const docRef = db.collection('users').doc(`${getEmail()}`);
         await docRef.set({
             ...albums

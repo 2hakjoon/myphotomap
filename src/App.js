@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { ImageUploadModal } from "./component/organisms/ImageUploadModal";
-import { KakaoMap } from "./component/organisms/KakaoMap/KakaoMap";
-import { connectDB } from "./firebase/fieBaseDB";
+import { ImageUploadModal } from "./screens/ImageUploadModal";
+import { KakaoMap } from "./screens/KakaoMap/KakaoMap";
+import { connectDB, FB_dbGetAlbums } from "./firebase/fieBaseDB";
 import { FB_login, connectAuth, getEmail } from "./firebase/fireBaseAuth";
 import { connectStorage, uploadPhoto } from "./firebase/fireBaseStorage";
 
@@ -24,17 +24,27 @@ const Button = styled.div`
 localStorage.removeItem("TOKEN");
 
 
+const init = async() => {
+ connectAuth();
+ FB_login();
+
+ connectDB();
+ connectStorage();
+  
+  //const data = await FB_dbGetAlbums();
+  //console.log(data)
+}
+
 function App() {
-
+  
   const [uploadModal, setUploadModal] = useState(false);
-  const provider = connectAuth();
-  FB_login(provider);
-
-  connectDB();
+  const [userAlbum, setUserAlbum] = useState({});
+  
   const click = () => {
   }
-
-  connectStorage();
+  useEffect(()=>{
+    init()
+  },[])
 
   return(
     <Container>

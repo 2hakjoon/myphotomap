@@ -1,8 +1,8 @@
 import { useState } from "react"
 import styled from "styled-components"
-import { FB_dbUploadAlbums } from "../../firebase/fieBaseDB"
-import { getPhoto, uploadPhoto } from "../../firebase/fireBaseStorage"
-import { Img } from "../atoms/Img"
+import { FB_dbUploadAlbums } from "../firebase/fieBaseDB"
+import { getPhoto, uploadPhoto } from "../firebase/fireBaseStorage"
+import { Img } from "../component/atoms/Img"
 import { Lat, Lng } from "./KakaoMap/KakaoMap"
 
 
@@ -22,7 +22,7 @@ const Wrapper = styled.div`
 const Imgview = styled.div`
     width: 70vw;
     height: 70vh;
-    background-color: red;
+    background-color: white;
     position: absolute;
 `
 
@@ -30,12 +30,21 @@ const ImgWrapper = styled.div`
     width: 500px;
     height: 500px;
 `
-let filename = "";
+let fileNameArr = [];
 
 const imgUploadHandler = (e) => {
-    console.log(e.target.files[0])
-    uploadPhoto(e.target.files[0])
-    filename = e.target.files[0].name;
+    console.log(e.target.files)
+    const fileListArr = []
+    const fileList = e.target.files;
+    const fileListLength = fileList['length'];
+    for(let i=0; i<fileListLength; i++){
+        fileListArr.push(fileList[i])
+    }
+    fileListArr.map((file)=>{
+        uploadPhoto(file)
+        fileNameArr.push(file.name)
+    })
+    console.log(fileNameArr)
 }
 
 
@@ -43,16 +52,16 @@ const imgUploadHandler = (e) => {
 export const ImageUploadModal = () => {
 
     const getImgFromStorage = async () => {
-        const res = await getPhoto(filename);
-        console.log(res)
-        setImg(res)
+        //const res = await getPhoto(filename);
+        //console.log(res)
+        //setImg(res)
     }
 
     const uploadToDB = () => {
         const data ={
             lat: Lat,
             lng: Lng,
-            photos:["KakaoTalk_20210603_231522292.jpg","KakaoTalk_20210603_231522292.jpg"]
+            photos:fileNameArr
         } 
         FB_dbUploadAlbums(data);
     }
@@ -62,7 +71,7 @@ export const ImageUploadModal = () => {
     return(
         <Wrapper id={"background"} >
             <Imgview>
-                <input type="file" onChange={imgUploadHandler}></input>
+                <input multiple="multiple" type="file" onChange={imgUploadHandler}></input>
                 <button onClick={getImgFromStorage}>불러오기</button>
                 <button onClick={uploadToDB}> DB 호출띠</button>
                 <ImgWrapper>

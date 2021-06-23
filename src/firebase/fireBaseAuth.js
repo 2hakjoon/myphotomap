@@ -1,6 +1,7 @@
 import firebase from "firebase";
 
 let keepEmail = "";
+let provider = "";
 
 export const setEmail = (email) => {
     keepEmail = email;
@@ -12,10 +13,10 @@ export const setEmail = (email) => {
 
 
 export const connectAuth = () => {
-    return new firebase.auth.GoogleAuthProvider();
+    provider = new firebase.auth.GoogleAuthProvider();
 }
 
-export const FB_login = (provider) => {
+export const FB_login = () => {
     if(!localStorage.getItem("TOKEN")){
         firebase.auth().signInWithPopup(provider).then((result) => {
             console.log(result)
@@ -29,6 +30,7 @@ export const FB_login = (provider) => {
                 var user = result.user;
                 localStorage.setItem('TOKEN', token);
                 keepEmail = user.email
+                return keepEmail
             }
             // The signed-in user info.
             
@@ -44,6 +46,6 @@ export const FB_login = (provider) => {
         });
     }
     else{
-        console.log(localStorage.getItem("TOKEN"))
+        return keepEmail
     }
 }
