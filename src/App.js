@@ -24,33 +24,51 @@ const Button = styled.div`
 localStorage.removeItem("TOKEN");
 
 
-const init = async() => {
- connectAuth();
- FB_login();
+const init = async(setEmail) => {
+ await connectAuth();
+ await FB_login(setEmail);
 
- connectDB();
- connectStorage();
-  
-  //const data = await FB_dbGetAlbums();
+ await connectDB();
+ await connectStorage();
+
+}
+
+const getAlbum = async (setUserAlbum) => {
+  const data = await FB_dbGetAlbums();
   //console.log(data)
+  let arrData=[];
+  for(let val in data){
+    arrData.push(data[val])
+  }
+  setUserAlbum(null)
+  console.log(arrData)
+  setUserAlbum([].concat(arrData))
 }
 
 function App() {
-  
+  const [email, setEmail] = useState(undefined);
   const [uploadModal, setUploadModal] = useState(false);
-  const [userAlbum, setUserAlbum] = useState({});
-  
-  const click = () => {
-  }
+  const [userAlbum, setUserAlbum] = useState(null);
+  const [checkSave, setCheckSave] = useState(false);
+
+
   useEffect(()=>{
-    init()
-  },[])
+    console.log("!")
+    if(!email){
+      init(setEmail)
+    }
+    else if(email && userAlbum){
+      getAlbum(setUserAlbum)
+    }
+    else{
+      getAlbum(setUserAlbum)
+    }
+  },[email, checkSave])
 
   return(
     <Container>
-      {uploadModal ? <ImageUploadModal /> : null}
-      <KakaoMap modalOpen={setUploadModal} />
-      <Button onClick={click}/>
+      {uploadModal ? <ImageUploadModal check={setCheckSave} modal={setUploadModal}/> : null}
+      {userAlbum && <KakaoMap modalOpen={setUploadModal} albums={userAlbum}/>}
     </Container>
   )
 }

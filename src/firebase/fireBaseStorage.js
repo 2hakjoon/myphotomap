@@ -18,7 +18,6 @@ export const uploadPhoto = async(file) => {
 
 export const getPhoto = async(filename) => {
     const userEmail = getEmail();
-
     const getImg = await storageRef.child(`${userEmail}/${filename}`).getDownloadURL();
     return getImg
 }

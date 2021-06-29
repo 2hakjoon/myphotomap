@@ -16,7 +16,7 @@ export const connectAuth = () => {
     provider = new firebase.auth.GoogleAuthProvider();
 }
 
-export const FB_login = () => {
+export const FB_login = (setEmail) => {
     if(!localStorage.getItem("TOKEN")){
         firebase.auth().signInWithPopup(provider).then((result) => {
             console.log(result)
@@ -30,6 +30,7 @@ export const FB_login = () => {
                 var user = result.user;
                 localStorage.setItem('TOKEN', token);
                 keepEmail = user.email
+                setEmail(keepEmail)
                 return keepEmail
             }
             // The signed-in user info.
