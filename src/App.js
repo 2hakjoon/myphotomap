@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { ImageUploadModal } from "./screens/ImageUploadModal";
+import { ImageModal } from "./screens/ImageModal";
 import { KakaoMap } from "./screens/KakaoMap/KakaoMap";
 import { connectDB, FB_dbGetAlbums } from "./firebase/fieBaseDB";
 import { FB_login, connectAuth, getEmail } from "./firebase/fireBaseAuth";
@@ -47,10 +47,11 @@ const getAlbum = async (setUserAlbum) => {
 
 function App() {
   const [email, setEmail] = useState(undefined);
-  const [uploadModal, setUploadModal] = useState(false);
+  const [modalType, setModalType] = useState(false);
   const [userAlbum, setUserAlbum] = useState(null);
   const [checkSave, setCheckSave] = useState(false);
-
+  const [selectedId, setSelectedId] = useState();
+  console.log(selectedId)
 
   useEffect(()=>{
     console.log("!")
@@ -67,8 +68,8 @@ function App() {
 
   return(
     <Container>
-      {uploadModal ? <ImageUploadModal check={setCheckSave} modal={setUploadModal}/> : null}
-      {userAlbum && <KakaoMap modalOpen={setUploadModal} albums={userAlbum}/>}
+      {modalType ? <ImageModal check={setCheckSave} modal={setModalType} type={modalType} album={userAlbum[selectedId]}/> : null}
+      {userAlbum && <KakaoMap modalOpen={setModalType} albums={userAlbum} target={setSelectedId}/>}
     </Container>
   )
 }

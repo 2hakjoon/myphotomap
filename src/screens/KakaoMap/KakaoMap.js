@@ -23,22 +23,28 @@ export let Lng = ""
 
 let pointing;
 
-export const KakaoMap = ({modalOpen, albums}) => {
+export const KakaoMap = ({modalOpen, albums, target}) => {
     
     let markers = [];
     const [imgSize, setImgSize] = useState(9);
+
     const clickevent = (e) => {
         pointing = e.target.id
-        if(e.target.id === "infoWindow"){
-            modalOpen(true);
+        const type = e.target.id.split(" ")[0];
+        const id = e.target.id.split(" ")[1];
+        console.log(e.target.id)
+        if(type === "infoWindow"){
+            modalOpen("upload");
         }
-        else if(e.target.id === "background"){
+        else if(type === "background"){
             modalOpen(false);
         }
-        else if(e.target.id === "myMark"){
+        else if(type === "myMark"){
             console.log("???")
             markers.map((val)=> val.close());
+            target(id);
             marker.setMap(null)
+            modalOpen("view");
         }
         else{
             console.log(e)
@@ -46,9 +52,9 @@ export const KakaoMap = ({modalOpen, albums}) => {
     }
 
 
-    const createCustomOverlay = (map, lat, lng, thumbnail) => {
+    const createCustomOverlay = (map, lat, lng, thumbnail, idx) => {
         var content =
-        `<div class="myMark" id="myMark" style="background-image: url(${thumbnail}); cursor:pointer; background-size: cover;"></div>`;
+        `<div class="myMark" id="myMark ${idx}" style="background-image: url(${thumbnail}); cursor:pointer; background-size: cover;"></div>`;
         
         // 커스텀 오버레이가 표시될 위치입니다
         var position = new kakao.maps.LatLng(lat, lng);
@@ -62,13 +68,13 @@ export const KakaoMap = ({modalOpen, albums}) => {
     }
 
     const addPhotoPin = async (map) => {
-        albums.map(async (album)=>{
+        albums.map(async (album, idx)=>{
             if(album.lat && album.lng && album.photos){
                 console.log(album.photos[0])
                 const res = await getPhoto(album.photos[0])
                 console.log(res)
 
-                createCustomOverlay(map, album.lat, album.lng, res)
+                createCustomOverlay(map, album.lat, album.lng, res, idx)
             }
         })
         

@@ -51,6 +51,12 @@ const CloseBtn = styled.div`
     position: right;
 `
 
+const ToolBar = styled.div`
+    width: 100%;
+    height: 40px;
+`
+
+
 let fileNameArr = [];
 
 const imgUploadHandler = (e, setImg) => {
@@ -83,8 +89,8 @@ const deleteImg = (e, setImg) => {
 }
 
 
-export const ImageUploadModal = ({check, modal}) => {
-
+export const ImageModal = ({check, modal, type, album}) => {
+    console.log(album)
     const getImgFromStorage = async () => {
         //const res = await getPhoto(filename);
         //console.log(res)
@@ -119,9 +125,14 @@ export const ImageUploadModal = ({check, modal}) => {
     return(
         <Wrapper id={"background"} >
             <Imgview>
-                <input multiple="multiple" type="file" accept="image/gif, image/jpeg, image/png" onChange={(e)=>imgUploadHandler(e, setImg)}></input>
-                <button onClick={getImgFromStorage} >불러오기</button>
-                <button onClick={uploadToDB}>저장하기</button>
+                {type=== "upload" ?
+                <ToolBar>
+                    <input multiple="multiple" type="file" accept="image/gif, image/jpeg, image/png" onChange={(e)=>imgUploadHandler(e, setImg)}></input>
+                    <button onClick={getImgFromStorage} >불러오기</button>
+                    <button onClick={uploadToDB}>저장하기</button>
+                </ToolBar>
+                :null
+                }
                 <ImgWrapper>
                 {img ? <>
                     {img.map((val, idx)=>{
