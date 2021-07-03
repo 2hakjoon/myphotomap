@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { SearchBar } from "../../component/organisms/SearchBar";
+import { SearchList } from "../../component/organisms/SearchList";
 import { getPhoto } from "../../firebase/fireBaseStorage";
 
 const Div = styled.div` 
@@ -12,10 +14,32 @@ const Div = styled.div`
     .myMark{
         width: ${props => 1000/(props.size*2)}px;
         height: ${props => 1000/(props.size*2)}px;
-        background-color: red;
+        background-color: none;
         border-radius : 47%;
     }
 `;
+
+const SearchBarWrapper = styled.div`
+    width : 500px;
+    height: fit-content;
+    position: absolute;
+    z-index: 3;
+`
+const FlexWrapper = styled.div`
+    width : 100%;
+    display: flex;
+
+`
+
+const SearchEnBtn = styled.div`
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    left: 0px;
+    top:0px;
+    z-index: 2;
+    background-color: gray;
+`
 
 
 export let Lat = ""
@@ -27,6 +51,9 @@ export const KakaoMap = ({modalOpen, albums, target}) => {
     
     let markers = [];
     const [imgSize, setImgSize] = useState(9);
+    const [searchVal, setSearchVal] = useState("");
+    const [searchResult, setSearchResult] = useState([]);
+    const [searchEn, setSearchEn] = useState(false);
 
     const clickevent = (e) => {
         pointing = e.target.id
@@ -79,6 +106,39 @@ export const KakaoMap = ({modalOpen, albums, target}) => {
         })
         
     }
+
+
+
+    const SearchMap = () =>{
+        var ps = new kakao.maps.services.Places(); 
+        const place = searchVal
+        ps.keywordSearch(place, placesSearchCB);
+        function placesSearchCB(data, status, pagination) {
+            if (status === kakao.maps.services.Status.OK) {
+                console.log(data, pagination)
+                // 정상적으로 검색이 완료됐으면
+                // 검색 목록과 마커를 표출합니다
+                //displayPlaces(data);
+        
+                // 페이지 번호를 표출합니다
+                //displayPagination(pagination);
+                setSearchResult([].concat(data))
+        
+            } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+        
+                alert('검색 결과가 존재하지 않습니다.');
+                return;
+        
+            } else if (status === kakao.maps.services.Status.ERROR) {
+        
+                alert('검색 결과 중 오류가 발생했습니다.');
+                return;
+        
+            }
+        }
+    }
+        
+
 let marker = new kakao.maps.Marker({})
     useEffect(() => {
 
@@ -88,11 +148,12 @@ let marker = new kakao.maps.Marker({})
 
         var mapContainer = document.getElementById("map"), // 지도를 표시할 div
             mapOption = {
-                center: new kakao.maps.LatLng(33.379441, 126.544072), // 지도의 중심좌표
-                level: 9, // 지도의 확대 레벨
+                center: new kakao.maps.LatLng(36.05024101738942, 127.52311227218215 ), // 지도의 중심좌표
+                level: 13, // 지도의 확대 레벨
             };
         // 지도를 생성합니다
         var map = new kakao.maps.Map(mapContainer, mapOption , kakao.maps.ControlPosition.TOPRIGHT);
+
         addPhotoPin(map)
 
         // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
@@ -141,6 +202,19 @@ let marker = new kakao.maps.Marker({})
         window.removeEventListener("click", clickevent);
        }
     },[]);
-
-    return <Div id={"map"} size={imgSize}></Div>;
+    return(
+        <>
+            <SearchEnBtn onClick={e=>setSearchEn(prev=>!prev)}>검색!</SearchEnBtn>
+            {searchEn &&
+                <SearchBarWrapper>
+                        <FlexWrapper>
+                            <SearchBar value={searchVal} setValue={setSearchVal} search={SearchMap}/>
+                            <button onClick={e=>setSearchEn(prev=>!prev)}>닫기</button>
+                        </FlexWrapper>
+                        {searchResult.length > 0 ? <SearchList data= {searchResult}/> : null}
+                </SearchBarWrapper>
+            }
+            <Div id={"map"} size={imgSize}></Div>
+        </>
+    );
 };

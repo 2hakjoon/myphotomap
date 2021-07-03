@@ -9,6 +9,7 @@ const SImg = styled.div`
     background-size: contain;
     background-repeat: no-repeat;
     background-position-x : 50%;
+    background-position-y : 50%;
 `
 
 

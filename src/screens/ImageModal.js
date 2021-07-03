@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { FB_dbUploadAlbums } from "../firebase/fieBaseDB"
 import { getPhoto, uploadPhoto } from "../firebase/fireBaseStorage"
@@ -16,30 +16,30 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+
 `
 
 
 const Imgview = styled.div`
-    width: 70vw;
-    height: 70vh;
+    width: 90vw;
+    height: 80vh;
+    border-radius: 10px;
     background-color: white;
     position: absolute;
+    padding : 50px;
 `
 
 const ImgWrapper = styled.div`
     width: 100%;
-    height: 600px;
+    height: 100%;
     display: flex;
     overflow: auto;
-    >div{
-        min-width: 500px;
-        margin: 10px;
-    }
 `
 
 const ImgBlock = styled.div`
-    width: 550px;
-    height : 550px;
+    height : 95%;
+    min-width: 500px;
+    margin: 10px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -54,13 +54,16 @@ const CloseBtn = styled.div`
 const ToolBar = styled.div`
     width: 100%;
     height: 40px;
+    input{
+        color: transparent;
+    }
 `
 
 
 let fileNameArr = [];
 
 const imgUploadHandler = (e, setImg) => {
-    console.log(e.target.files)
+    //console.log(e.target.files)
     fileNameArr=[];
     const fileListArr = []
     const fileList = e.target.files;
@@ -75,7 +78,8 @@ const imgUploadHandler = (e, setImg) => {
         uploadPhoto(file)
         fileNameArr.push(file.name)
     })
-    console.log(fileNameArr)
+    //console.log(fileNameArr)
+    e.target.value="";
 }
 
 
@@ -85,18 +89,20 @@ const deleteImg = (e, setImg) => {
         newArr.splice(Number(e.target.id), 1);
         return ([].concat(newArr))
     })
-    fileNameArr = fileNameArr.splice(Number(e.target.id), 1);
+    fileNameArr.splice(Number(e.target.id), 1);
+    console.log(fileNameArr)
 }
 
 
-export const ImageModal = ({check, modal, type, album}) => {
-    console.log(album)
-    const getImgFromStorage = async () => {
-        //const res = await getPhoto(filename);
-        //console.log(res)
-        //setImg(res)
-    }
 
+
+
+export const ImageModal = ({check, modal}) => {
+    //console.log(album)
+
+    const [img, setImg] = useState([]);
+
+   
     const uploadToDB = async () => {
         if(fileNameArr.length!==0){
             try{
@@ -119,20 +125,15 @@ export const ImageModal = ({check, modal, type, album}) => {
         }
     }
 
-    const [img, setImg] = useState([]);
 
-    console.log(img)
+    //console.log(img)
     return(
         <Wrapper id={"background"} >
             <Imgview>
-                {type=== "upload" ?
                 <ToolBar>
                     <input multiple="multiple" type="file" accept="image/gif, image/jpeg, image/png" onChange={(e)=>imgUploadHandler(e, setImg)}></input>
-                    <button onClick={getImgFromStorage} >불러오기</button>
                     <button onClick={uploadToDB}>저장하기</button>
                 </ToolBar>
-                :null
-                }
                 <ImgWrapper>
                 {img ? <>
                     {img.map((val, idx)=>{

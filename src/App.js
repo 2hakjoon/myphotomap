@@ -5,6 +5,7 @@ import { KakaoMap } from "./screens/KakaoMap/KakaoMap";
 import { connectDB, FB_dbGetAlbums } from "./firebase/fieBaseDB";
 import { FB_login, connectAuth, getEmail } from "./firebase/fireBaseAuth";
 import { connectStorage, uploadPhoto } from "./firebase/fireBaseStorage";
+import { ShowPhoto } from "./screens/ShowPhoto";
 
 
 const Container = styled.div`
@@ -27,7 +28,6 @@ localStorage.removeItem("TOKEN");
 const init = async(setEmail) => {
  await connectAuth();
  await FB_login(setEmail);
-
  await connectDB();
  await connectStorage();
 
@@ -68,7 +68,8 @@ function App() {
 
   return(
     <Container>
-      {modalType ? <ImageModal check={setCheckSave} modal={setModalType} type={modalType} album={userAlbum[selectedId]}/> : null}
+      {modalType === "upload" ? <ImageModal check={setCheckSave} modal={setModalType} /> : null}
+      {modalType === "view" ? <ShowPhoto modal={setModalType}  album={userAlbum[selectedId]}/> : null}
       {userAlbum && <KakaoMap modalOpen={setModalType} albums={userAlbum} target={setSelectedId}/>}
     </Container>
   )
