@@ -19,13 +19,18 @@ background-color: white;
 
 
 
-export const SearchList = ({data})=> {
+export const SearchList = ({data, panToPoint})=> {
     console.log(data)
+
+    const moveToPoint = (e) => {
+        const LatLng = e.target.id.split(" ")
+        panToPoint(LatLng[1], LatLng[0])
+    }
     return(
         <Wrapper>
             <SearchReults>
                 {data.map((val,idx)=> {
-                    return <SearchItem key={val.id}>
+                    return <SearchItem key={val.id} id={`${val.x} ${val.y}`} onClick={moveToPoint}>
                         {val.address_name}
                         </SearchItem>
                 })}

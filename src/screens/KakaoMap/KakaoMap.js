@@ -47,6 +47,7 @@ export let Lng = ""
 
 let pointing;
 
+let map;
 export const KakaoMap = ({modalOpen, albums, target}) => {
     
     let markers = [];
@@ -137,11 +138,19 @@ export const KakaoMap = ({modalOpen, albums, target}) => {
             }
         }
     }
-        
 
+   
+let panToPoint = (Lat,Lng) =>{
+    console.log(Lat, Lng)
+    // 이동할 위도 경도 위치를 생성합니다 
+    var moveLatLon = new kakao.maps.LatLng(Lat, Lng);
+    
+    // 지도 중심을 부드럽게 이동시킵니다
+    // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+    map.panTo(moveLatLon);            
+};
 let marker = new kakao.maps.Marker({})
     useEffect(() => {
-
         window.addEventListener("click", clickevent);
 
         marker = new kakao.maps.Marker({})
@@ -151,14 +160,12 @@ let marker = new kakao.maps.Marker({})
                 center: new kakao.maps.LatLng(36.05024101738942, 127.52311227218215 ), // 지도의 중심좌표
                 level: 13, // 지도의 확대 레벨
             };
-        // 지도를 생성합니다
-        var map = new kakao.maps.Map(mapContainer, mapOption , kakao.maps.ControlPosition.TOPRIGHT);
+            // 지도를 생성합니다
+        map = new kakao.maps.Map(mapContainer, mapOption);
 
         addPhotoPin(map)
 
         // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
-        var zoomControl = new kakao.maps.ZoomControl();
-        map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
         // 지도가 확대 또는 축소되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
         kakao.maps.event.addListener(map, 'zoom_changed', function() {        
@@ -202,6 +209,7 @@ let marker = new kakao.maps.Marker({})
         window.removeEventListener("click", clickevent);
        }
     },[]);
+
     return(
         <>
             <SearchEnBtn onClick={e=>setSearchEn(prev=>!prev)}>검색!</SearchEnBtn>
@@ -211,7 +219,7 @@ let marker = new kakao.maps.Marker({})
                             <SearchBar value={searchVal} setValue={setSearchVal} search={SearchMap}/>
                             <button onClick={e=>setSearchEn(prev=>!prev)}>닫기</button>
                         </FlexWrapper>
-                        {searchResult.length > 0 ? <SearchList data= {searchResult}/> : null}
+                        {searchResult.length > 0 ? <SearchList data= {searchResult} panToPoint={panToPoint}/> : null}
                 </SearchBarWrapper>
             }
             <Div id={"map"} size={imgSize}></Div>
